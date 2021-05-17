@@ -27,7 +27,7 @@ cp -r inputs/nalu-wind/${NALU_REG_TEST}/* $PANTHEON_RUN_DIR
 cp run/submit.sh $PANTHEON_RUN_DIR
 
 # go to run dir and update the submit script and nalu input file locations
-pushd $PANTHEON_RUN_DIR
+pushd $PANTHEON_RUN_DIR > /dev/null 2>&1 
 sed -i "s/<pantheon_workflow_jid>/${PANTHEON_WORKFLOW_JID}/" submit.sh
 sed -i "s#<pantheon_workflow_dir>#${PANTHEON_WORKFLOW_DIR}#" submit.sh
 sed -i "s#<pantheon_run_dir>#${PANTHEON_RUN_DIR}#g" submit.sh

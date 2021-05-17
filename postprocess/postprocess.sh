@@ -12,7 +12,7 @@ cp postprocess/volume_rendering_cdb_extract.py $PANTHEON_RUN_DIR
 cp postprocess/post_submit.sh $PANTHEON_RUN_DIR
 
 # go to run dir and update the submit script
-pushd $PANTHEON_RUN_DIR
+pushd $PANTHEON_RUN_DIR > /dev/null 2>&1
 mkdir cinema_databases
 
 sed -i "s/<pantheon_workflow_jid>/${PANTHEON_WORKFLOW_JID}/" post_submit.sh

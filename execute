@@ -7,3 +7,4 @@ source pantheon/env.sh
 ./sbang.sh run/run.sh
 ./sbang.sh postprocess/postprocess.sh
 ./sbang.sh validate/validate.sh
+./sbang.sh validate/view.sh
