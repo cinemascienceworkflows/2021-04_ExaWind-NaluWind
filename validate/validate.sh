@@ -10,20 +10,16 @@ GOLD=validate/data/pantheon.cdb
 
 echo "     $OUTPUT"
 
-imgs="RenderView1_000000.png RenderView1_000005.png RenderView1_000011.png"
-
 PASS=true
 if [ -d $OUTPUT ]; then
-    for img in $imgs; do
-        if cmp "$OUTPUT/$img" "$GOLD/$img"; then
-            echo "     Comparing images $GOLD/$img"
-        else
-            echo "FILES differ:"
-            echo "    $OUTPUT"
-            echo "    $GOLD"
-            PASS=false
-        fi
-    done
+    if cmp "$OUTPUT/data.csv" "$GOLD/data.csv"; then
+        echo "     Comparing images $GOLD/$img"
+    else
+        echo "FILES differ:"
+        echo "    $OUTPUT"
+        echo "    $GOLD"
+        PASS=false
+    fi
 else
     echo "Cinema Database: $OUTPUT does not exist"
     PASS=false
