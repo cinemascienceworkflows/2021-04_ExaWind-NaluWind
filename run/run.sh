@@ -16,15 +16,21 @@ if $RUN_CLEAN; then
 fi
 
 # set up spack env
-. ${PANTHEON_RUN_DIR}/../spack/share/spack/setup-env.sh
+# . ${PANTHEON_RUN_DIR}/../spack/share/spack/setup-env.sh
 
 # NaluWind executable variables
+echo 1
 NALU_BIN_DIR=$(spack location -i nalu-wind)/bin
 
 # copy executable and support files
+echo 2
+echo ${NALU_BIN_DIR}
 cp -r ${NALU_BIN_DIR}/* $PANTHEON_RUN_DIR
+echo 2.1
 cp -r inputs/nalu-wind/${NALU_REG_TEST}/* $PANTHEON_RUN_DIR
+echo 2.2
 cp run/submit.sh $PANTHEON_RUN_DIR
+echo 3
 
 # go to run dir and update the submit script and nalu input file locations
 pushd $PANTHEON_RUN_DIR
@@ -39,4 +45,4 @@ sed -i "s#<compute_allocation>#${COMPUTE_ALLOCATION}#" submit.sh
 echo "----------------------------------------------------------------------"
 echo "PTN: submitting run ..." 
 echo "----------------------------------------------------------------------"
-bsub submit.sh
+bash submit.sh

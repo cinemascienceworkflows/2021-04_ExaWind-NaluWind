@@ -11,12 +11,9 @@ PANTHEON_SOURCE_ROOT=$PWD
 
 # these settings allow you to control what gets built ...
 BUILD_CLEAN=true
-INSTALL_SPACK=true
+INSTALL_SPACK=false
 USE_SPACK_CACHE=true
 INSTALL_APP=false
-
-# commits
-SPACK_COMMIT=3d7069e03954e5a4042d41c27a75dacd33e52696
 
 # ---------------------------------------------------------------------------
 #
@@ -54,36 +51,6 @@ if $INSTALL_SPACK; then
     echo "PTN: installing Spack ..."
     echo "------------------------------------------------------------"
 
-    # copy spack settings
-    module load gcc/7.4.0
-    cp inputs/spack/spack.yaml $PANTHEON_WORKFLOW_DIR
-
-    pushd $PANTHEON_WORKFLOW_DIR > /dev/null 2>&1
-
-    git clone https://github.com/spack/spack
-    pushd spack
-    git checkout $SPACK_COMMIT
-    popd
-
-    # set compiler paths for spac
-    # this is done to remove system-specific information from the spack.yaml file
-    # which can be easily pulled from the environment during runtime
-    COMPILER_LOC=`which gcc`
-    sed -i "s#<system_gcc>#$COMPILER_LOC#" spack.yaml
-    COMPILER_LOC=`which g++`
-    sed -i "s#<system_gpp>#$COMPILER_LOC#" spack.yaml
-    COMPILER_LOC=`which gfortran`
-    sed -i "s#<system_gfortran>#$COMPILER_LOC#" spack.yaml
-    PANTHEON_SYSTEM=`spack arch`
-    PANTHEON_ARCH=${PANTHEON_SYSTEM##*-}
-    PANTHEON_OS=`echo ${PANTHEON_SYSTEM} | sed 's/.*-\(.*\)-.*/\1/g'`
-    sed -i "s#<system_os>#$PANTHEON_OS#" spack.yaml
-    sed -i "s#<system_arch>#$PANTHEON_ARCH#" spack.yaml
-
-    # activate spack concretize 
-    . spack/share/spack/setup-env.sh
-    spack -e . concretize -f 2>&1 | tee concretize.log
-    popd
 fi
 
 if $USE_SPACK_CACHE; then
@@ -91,27 +58,11 @@ if $USE_SPACK_CACHE; then
     echo "PTN: using Spack E4S cache ..."
     echo "------------------------------------------------------------"
 
-    pushd $PANTHEON_WORKFLOW_DIR
-
-    # set up spack to use E4S cache
-    spack mirror add e4s_pantheon https://cache.e4s.io
-    wget https://oaciss.uoregon.edu/e4s/e4s.pub
-    spack gpg trust e4s.pub
-    module load patchelf
-
-    time spack -e . install
-
-    popd
 else
     echo "------------------------------------------------------------"
     echo "PTN: not using Spack E4S cache for Ascent..."
     echo "------------------------------------------------------------"
 
-    pushd $PANTHEON_WORKFLOW_DIR
-
-    time spack -e . install --no-cache
-
-    popd
 fi
 
 # build the application and parts as needed
@@ -120,7 +71,6 @@ if $INSTALL_APP; then
     echo "PTN: installing app ..."
     echo ----------------------------------------------------------------------
 
-    source $PANTHEON_SOURCE_ROOT/setup/install-app.sh
 fi
 
 END_TIME=$(date +"%r %Z")

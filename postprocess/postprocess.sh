@@ -25,9 +25,9 @@ sed -i "s#<compute_allocation>#${COMPUTE_ALLOCATION}#" post_submit.sh
 echo "----------------------------------------------------------------------"
 echo "PTN: submitting run ..."
 echo "----------------------------------------------------------------------"
-bsub post_submit.sh
+bash post_submit.sh
 popd
-./sbang.sh postprocess/wait_for_completion.sh
+# ./sbang.sh postprocess/wait_for_completion.sh
 
 # install cinema viewers
 cp -rf inputs/cinema/* $PANTHEON_RUN_DIR/cinema_databases
